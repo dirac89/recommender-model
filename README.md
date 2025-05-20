@@ -101,9 +101,9 @@ Incluyen:
 
 ## 📬 Contacto
 
-Desarrollado por [TU NOMBRE]  
-✉️ [tu.email@example.com]  
-🔗 [linkedin.com/in/tuusuario](https://linkedin.com/in/tuusuario)
+Desarrollado por Dirac89
+✉️ [aguilerajavier58@gmail.com]  
+🔗 [linkedin.com/in/javier-aguilera](https://www.linkedin.com/in/javier-aguilera-fernández/)
 
 ---
 
