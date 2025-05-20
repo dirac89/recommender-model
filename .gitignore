@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+*.sqlite3
+
+# Data & Models
+data/raw/
+models/
+outputs/
+*.csv
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# Poetry / Virtualenv
+poetry.lock
