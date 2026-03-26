@@ -37,3 +37,4 @@ DEFAULT_CATBOOST_PARAMS = {
 # === Configuración de entrenamiento ===
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
+CUTOFF_DATE = "2026-03-01"  # Fecha para split temporal

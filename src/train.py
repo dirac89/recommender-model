@@ -9,6 +9,10 @@ from src.config import (
     TARGET_COL
 )
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+try:
+    from sklearn.metrics import root_mean_squared_error
+except ImportError:
+    root_mean_squared_error = None
 from src.config import METRICS_PATH
 import json
 
@@ -27,6 +31,12 @@ class RecommenderTrainer:
             X_train = X_train.drop(columns=['departure_date'])
             X_test = X_test.drop(columns=['departure_date'])
 
+        # Asegurar que las columnas categóricas son strings y no tienen NaNs
+        for col in self.categorical_columns:
+            if col in X_train.columns:
+                X_train[col] = X_train[col].fillna("missing").astype(str)
+                X_test[col] = X_test[col].fillna("missing").astype(str)
+
         y_train = pd.read_csv(os.path.join(self.processed_dir, "y_train.csv")).values.ravel()
         y_test = pd.read_csv(os.path.join(self.processed_dir, "y_test.csv")).values.ravel()
         return X_train, X_test, y_train, y_test
@@ -39,7 +49,12 @@ class RecommenderTrainer:
     
     def evaluate_model(self, model, X_test, y_test):
         preds = model.predict(X_test)
-        rmse = mean_squared_error(y_test, preds, squared=False)
+        
+        if root_mean_squared_error:
+            rmse = root_mean_squared_error(y_test, preds)
+        else:
+            rmse = mean_squared_error(y_test, preds, squared=False)
+            
         mae = mean_absolute_error(y_test, preds)
         r2 = r2_score(y_test, preds)
 
@@ -69,4 +84,5 @@ if __name__ == "__main__":
     trainer = RecommenderTrainer()
     X_train, X_test, y_train, y_test = trainer.load_data()
     model = trainer.train(X_train, y_train)
+    trainer.evaluate_model(model, X_test, y_test)
     trainer.save_model(model)

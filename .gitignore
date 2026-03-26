@@ -10,6 +10,7 @@ data/raw/
 models/
 outputs/
 *.csv
+catboost_info/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -20,3 +21,6 @@ outputs/
 
 # Poetry / Virtualenv
 poetry.lock
+
+# Claude
+*.md
