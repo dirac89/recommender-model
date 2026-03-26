@@ -144,11 +144,12 @@ def generate_synthetic_data_other(n_samples=1000000, n_flights=1000, n_agencies=
 
 
 
+from src.common.config import RAW_DATA_PATH
+
 if __name__ == "__main__":
-    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs(os.path.dirname(RAW_DATA_PATH), exist_ok=True)
     df = generate_synthetic_data()
-    second_df = generate_synthetic_data_other()
-    df.to_csv("data/raw/synthetic_recommendation_dataset.csv", index=False)
-    second_df.to_csv("data/raw/synthetic_recommendation_dataset_other.csv", index=False)
-    print("✅ Dataset generado en data/raw/synthetic_recommendation_dataset.csv")
-    print("✅ Segundo dataset generado en data/raw/synthetic_recommendation_dataset_other.csv")
+    # second_df = generate_synthetic_data_other()
+    df.to_csv(RAW_DATA_PATH, index=False)
+    # second_df.to_csv("data/raw/synthetic_recommendation_dataset_other.csv", index=False)
+    print(f"✅ Dataset generado en {RAW_DATA_PATH}")

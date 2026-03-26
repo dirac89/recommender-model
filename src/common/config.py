@@ -1,7 +1,7 @@
 import os
 
 # === Rutas base ===
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 RAW_DATA_PATH = os.path.join(DATA_DIR, "raw", "synthetic_recommendation_dataset.csv")
 PROCESSED_DIR = os.path.join(DATA_DIR, "processed")

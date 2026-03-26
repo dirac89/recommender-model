@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from catboost import CatBoostRegressor, Pool
-from src.config import (
+from src.common.config import (
     PROCESSED_DIR,
     MODEL_PATH,
     CATEGORICAL_COLUMNS,
@@ -13,7 +13,7 @@ try:
     from sklearn.metrics import root_mean_squared_error
 except ImportError:
     root_mean_squared_error = None
-from src.config import METRICS_PATH
+from src.common.config import METRICS_PATH
 import json
 
 class RecommenderTrainer:

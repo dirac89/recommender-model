@@ -3,7 +3,7 @@ import numpy as np
 import os
 from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
-from src.config import RAW_DATA_PATH, PROCESSED_DIR, TARGET_COL, CATEGORICAL_COLUMNS, TEST_SIZE, RANDOM_STATE, CUTOFF_DATE
+from src.common.config import RAW_DATA_PATH, PROCESSED_DIR, TARGET_COL, CATEGORICAL_COLUMNS, TEST_SIZE, RANDOM_STATE, CUTOFF_DATE
 
 class Preprocessor:
     def __init__(self, input_path=RAW_DATA_PATH, output_dir=PROCESSED_DIR, target_col=TARGET_COL):
