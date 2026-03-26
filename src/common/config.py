@@ -34,6 +34,10 @@ DEFAULT_CATBOOST_PARAMS = {
     "verbose": 50
 }
 
+# === Parámetros de Negocio (Level 2) ===
+ALPHA_OVER_ALLOCATION = 1.1  # Probamos con una asimetría leve para estabilidad inicial
+CONFIDENCE_LEVEL = 0.90      # Nivel de confianza para intervalos conformal
+
 # === Configuración de entrenamiento ===
 TEST_SIZE = 0.2
 RANDOM_STATE = 42

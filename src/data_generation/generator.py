@@ -10,9 +10,7 @@ def generate_synthetic_data(n_samples=1000000, n_flights=1000, n_agencies=20):
     flights = [f"FLIGHT_{i}" for i in range(1, n_flights + 1)]
     agencies = [f"AGENCY_{i}" for i in range(1, n_agencies + 1)]
     routes = ['MAD-BCN', 'BCN-MAD', 'MAD-JFK', 'JFK-MAD', 'MAD-CDG', 'MAD-MEX', 'MAD-MIA', 'MAD-EZE', 'MAD-ORY', 'MAD-LAX']
-    hauls = ['short', 'medium', 'long']
     flight_classes = ['Y', 'J', 'F']
-    seasons = ['winter', 'spring', 'summer', 'autumn']
 
     rows = []
 
@@ -144,12 +142,72 @@ def generate_synthetic_data_other(n_samples=1000000, n_flights=1000, n_agencies=
 
 
 
+def generate_inference_data(flight_id="FLIGHT_PRED_001", n_agencies=20):
+    """
+    Genera datos para un solo vuelo en el futuro para probar la inferencia.
+    """
+    agencies = [f"AGENCY_{i}" for i in range(1, n_agencies + 1)]
+    routes = ['MAD-BCN', 'BCN-MAD', 'MAD-JFK', 'JFK-MAD', 'MAD-CDG', 'MAD-MEX', 'MAD-MIA', 'MAD-EZE', 'MAD-ORY', 'MAD-LAX']
+    flight_classes = ['Y', 'J', 'F']
+    
+    route = random.choice(routes)
+    haul = 'short' if 'MAD' in route and 'BCN' in route else 'long' if 'JFK' in route and 'MEX' in route and 'MIA' in route else 'medium'
+    international = 1 if 'JFK' in route or 'CDG' in route or 'MEX' in route or 'MIA' in route or 'EZE' in route else 0
+    
+    # Fecha futura: hoy + 30 días
+    departure_date = datetime.now() + timedelta(days=30)
+    departure_hour = np.random.randint(0, 24)
+    weekday = departure_date.strftime('%A')
+    
+    month = departure_date.month
+    if month in [12, 1, 2]: season = 'winter'
+    elif month in [3, 4, 5]: season = 'spring'
+    elif month in [6, 7, 8]: season = 'summer'
+    else: season = 'autumn'
+
+    rows = []
+    flight_capacity = np.random.randint(100, 300)
+
+    for agency_id in agencies:
+        flight_class = random.choice(flight_classes)
+        agency_rating = np.clip(np.random.normal(loc=0.7, scale=0.15), 0, 1)
+        
+        # Simular ventas pasadas moderadas
+        past_sales = np.random.poisson(lam=15)
+        past_materialization = np.clip(np.random.beta(a=2, b=1.5), 0, 1)
+        
+        # Load factors ficticios pero coherentes
+        load_factor_expected = np.clip(np.random.normal(loc=0.8, scale=0.05), 0.6, 0.95)
+        
+        rows.append({
+            'flight_id': flight_id,
+            'agency_id': agency_id,
+            'departure_date': departure_date.date(),
+            'days_to_departure': 30,
+            'route': route,
+            'haul': haul,
+            'flight_class': flight_class,
+            'weekday': weekday,
+            'season': season,
+            'departure_hour': departure_hour,
+            'international': international,
+            'flight_capacity': flight_capacity,
+            'load_factor_expected': load_factor_expected,
+            'load_factor_lag_3': np.clip(load_factor_expected + 0.02, 0, 1),
+            'load_factor_lag_7': np.clip(load_factor_expected - 0.01, 0, 1),
+            'agency_rating': agency_rating,
+            'past_sales': past_sales,
+            'past_materialization': past_materialization,
+            'initial_seats_assigned': int(past_sales * 1.1)  # Valor proxy para inferencia
+        })
+
+    return pd.DataFrame(rows)
+
+
 from src.common.config import RAW_DATA_PATH
 
 if __name__ == "__main__":
     os.makedirs(os.path.dirname(RAW_DATA_PATH), exist_ok=True)
     df = generate_synthetic_data()
-    # second_df = generate_synthetic_data_other()
     df.to_csv(RAW_DATA_PATH, index=False)
-    # second_df.to_csv("data/raw/synthetic_recommendation_dataset_other.csv", index=False)
     print(f"✅ Dataset generado en {RAW_DATA_PATH}")

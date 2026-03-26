@@ -1,9 +1,7 @@
 import pandas as pd
-import numpy as np
 import os
-from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
-from src.common.config import RAW_DATA_PATH, PROCESSED_DIR, TARGET_COL, CATEGORICAL_COLUMNS, TEST_SIZE, RANDOM_STATE, CUTOFF_DATE
+from src.common.config import RAW_DATA_PATH, PROCESSED_DIR, TARGET_COL, CATEGORICAL_COLUMNS, RANDOM_STATE, CUTOFF_DATE
 
 class Preprocessor:
     def __init__(self, input_path=RAW_DATA_PATH, output_dir=PROCESSED_DIR, target_col=TARGET_COL):
@@ -21,7 +19,7 @@ class Preprocessor:
         month = date.month
         if month in [12, 1, 2]: return 'winter'
         elif month in [3, 4, 5]: return 'spring'
-        elif month in [6, 7, 8]: season = 'summer'
+        elif month in [6, 7, 8]: return 'summer'
         else: return 'autumn'
 
     def _extract_day_type(self, date: pd.Timestamp) -> str:
@@ -56,6 +54,10 @@ class Preprocessor:
 
 
     def preprocess_and_split(self, df: pd.DataFrame):
+        # 0. Asegurar formato de fechas
+        if not pd.api.types.is_datetime64_any_dtype(df['departure_date']):
+            df['departure_date'] = pd.to_datetime(df['departure_date'])
+
         # 1. Limpieza básica
         df = df.fillna({
             'past_sales': 0,
